@@ -25,5 +25,21 @@ VALUES
     (14, 'Cutlery Set', 'Kitchen Supplies', 34.50, 40, 4.4),
     (15, 'Cozy Throw Blanket', 'Furnishings', 24.99, 100, 4.2);
     
-    
--- © Copyright 2025 Break Into Tech  --
+select *    
+from superstore;
+
+select item_name, price
+from superstore 
+order by price;
+
+select sum(price) as 'sum of prices'
+from superstore;
+
+select sum(price)
+from superstore
+where category='Kitchen Supplies';
+
+select item_name, average_rating
+from superstore 
+where average_rating>=4.5
+order by average_rating desc;
