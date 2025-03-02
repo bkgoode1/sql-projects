@@ -1,0 +1,79 @@
+#I downloaded Spotify data from Kaggle and created a table to store it. After inserting the dataset into the table, I used SQL to analyze and explore the data.
+
+#Creating the table: 
+CREATE TABLE BIT_DB.Spotifydata (
+id integer PRIMARY KEY,
+artist_name varchar NOT NULL,
+track_name varchar NOT NULL,
+track_id varchar NOT NULL,
+popularity integer NOT NULL,
+danceability decimal(4,3) NOT NULL,
+energy decimal(4,3) NOT NULL,
+key integer NOT NULL,
+loudness decimal(5,3) NOT NULL,
+mode integer NOT NULL,
+speechiness decimal(5,4) NOT NULL,
+acousticness decimal(6,5) NOT NULL,
+instrumentalness text NOT NULL,
+liveness decimal(5,4) NOT NULL,
+valence decimal(4,3) NOT NULL,
+tempo decimal(6,3) NOT NULL,
+duration_ms integer NOT NULL,
+time_signature integer NOT NULL 
+)
+
+--Artist and their average popularity listed from highest to lowest
+select distinct artist_name, avg(popularity)
+from bit_db.Spotifydata
+group by artist_name
+order by avg(popularity) desc;
+
+--The artist who released the longest song.
+select artist_name,track_name, max(duration_ms)
+from bit_db.Spotifydata
+order by duration_ms desc limit 1;
+
+--with this query I wanted to see the popularity ratings for tracks with low danceability ratings
+
+select artist_name,track_name,popularity,danceability
+from bit_db.Spotifydata
+where danceability<0.50
+order by danceability asc;
+
+
+-- Retrieves the number of orders for each NY-based location where there are more than two orders.  
+SELECT DISTINCT location,  
+count(orderID)  
+FROM bit_db.JanSales  
+WHERE location LIKE '%NY%'  
+GROUP BY location  
+HAVING count(orderID) > 2;  
+
+-- Shows the total quantity sold for each headphone-related product in February.  
+SELECT product,  
+sum(quantity)  
+FROM bit_db.FebSales  
+WHERE product LIKE '%headphone%'  
+GROUP BY product;  
+
+-- Calculates the average revenue per customer account in February.  
+SELECT sum(quantity * price) / total(acctnum) AS average  
+FROM bit_db.FebSales feb  
+LEFT JOIN bit_db.customers cust  
+ON feb.orderID = cust.order_id;  
+
+-- Computes the average quantity of products purchased per customer in February.  
+SELECT sum(quantity) / count(cust.acctnum)  
+FROM bit_db.FebSales feb  
+LEFT JOIN bit_db.customers cust  
+ON feb.orderID = cust.order_id;  
+
+-- Identifies the highest grossing product in January, calculated by total sales revenue.  
+SELECT sum(quantity * price),  
+product  
+FROM bit_db.JanSales  
+GROUP BY product  
+ORDER BY price DESC  
+LIMIT 1;  
+
+
