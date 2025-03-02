@@ -1,0 +1,65 @@
+--With this query we get to see the total revenue each sales agent accumulated
+select E.FirstName, total(Total)
+from chinook.employees e 
+inner join chinook.customers c
+on e.EmployeeId=c.SupportRepid
+inner join chinook.invoices i 
+on i.CustomerId=c.CustomerId
+group by E.FirstName;
+
+
+--Total invoices in 2009
+Select count(InvoiceDate)
+from chinook.invoices
+where InvoiceDate like '2009%';
+
+
+-- This query identifies the most popular genre (by the number of purchases) for each country.
+
+With GenrePurchase as(
+select i.BillingCountry, g.Name as genre, count(*) as purchases 
+from invoice_items it
+inner join tracks t
+on it.TrackId = t.TrackId
+inner join invoices i
+on it.InvoiceId=i.InvoiceId
+inner join genres g
+on g.GenreId = t.GenreId
+group by i.BillingCountry, g.Name)
+
+select BillingCountry, genre, purchases 
+from GenrePurchase 
+where (BillingCountry, purchases) 
+in( select BillingCountry, max(purchases)
+from GenrePurchase 
+group by BillingCountry)
+order by BillingCountry;
+
+
+--The query shows the names of tracks (along with the track's genre) that have been purchased more than 3 times
+select t.Name,g.name, count(t.name) as count
+from chinook.tracks t
+inner join chinook.invoice_items it 
+on t.TrackId=it.TrackId 
+inner join chinook.genres g
+on t.GenreId=g.GenreId
+group by t.name 
+having count> 3
+order by count desc 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
